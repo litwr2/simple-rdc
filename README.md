@@ -13,6 +13,7 @@ Component **->** + Component **|** - Component **|** Item
 Item **->** Element **|** Element ^ Component
 
 Element **->** (Formula) **|** number
+
 ---
 
 The grammar above is left recursive so the parser has to use the equivalent grammar in EBNF:
@@ -31,6 +32,7 @@ Component **->** + Component **|** - Component **|** Item
 Item **->** Element **|** Element ^ Component
 
 Element **->** (Formula) **|** number
+
 ---
 
 
