@@ -3,7 +3,7 @@ It is a simple recurse descent parser for arithmetic formulas.  It converts a fo
 
 It works with any formula compliant with the next grammar in BNF:
 
-```EBNF
+```
 Formula -> Formula + Term | Formula - Term
 Term -> Term * Component | Term / Component
 Component -> + Component | - Component | Item
@@ -13,7 +13,7 @@ Element -> (Formula) | number
 
 The grammar above is left recursive so the parser has to use the equivalent grammar in EBNF:
 
-```EBNF
+```
 Formula -> Term { AddSub Term }
 AddSub -> + | -
 Term -> Component { MulDiv Component }
