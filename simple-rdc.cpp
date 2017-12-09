@@ -2,15 +2,18 @@
 #include<cstdlib>
 #include<cstring>
 #include<stack>
+#define EVALUATE 1
+#define MAXSIZE 10000000
 using namespace std;
 
 stack<int> z;
 char *infix, *postfix;
+char s[MAXSIZE], r[MAXSIZE];
 void Term(), Element(), Component(), Item();
 
-void error() {
+void error(unsigned n) {
    cerr << "Error!\n";
-   exit(1);
+   exit(n);
 }
 void Formula() {
    char sign;
@@ -21,6 +24,7 @@ void Formula() {
       Term();
       *postfix++ = sign;
       *postfix++ = ' ';
+#if EVALUATE
       if (sign == '+') {
          sum = z.top();
          z.pop();
@@ -33,6 +37,7 @@ void Formula() {
       }
       z.pop();
       z.push(sum);
+#endif
    }
 }
 void Term() {
@@ -44,6 +49,7 @@ void Term() {
       Component();
       *postfix++ = sign;
       *postfix++ = ' ';
+#if EVALUATE
       if (sign == '*') {
          sum = z.top();
          z.pop();
@@ -56,6 +62,7 @@ void Term() {
       }
       z.pop();
       z.push(sum);
+#endif
    }
 }
 void Component() {
@@ -64,7 +71,9 @@ void Component() {
       sign = *infix++;
       Component();
       if (sign == '-') {
+#if EVALUATE
          z.top() = -z.top();
+#endif
          *postfix++ = '@';   //unary minus
          *postfix++ = ' ';
       }
@@ -72,46 +81,49 @@ void Component() {
    else
       Item();
 }
-
 void Item() {
    int sum, m = 1;
    Element();
    if (*infix == '^') {
       infix++;
       Component();
+      *postfix++ = '^';
+      *postfix++ = ' ';
+#if EVALUATE
       sum = z.top();
       z.pop();
       int t = z.top();
       for (int i = 1; i <= sum; i++)
          m *= t;
-      *postfix++ = '^';
-      *postfix++ = ' ';
+#endif
    }
+#if EVALUATE
    else
       m = z.top();
    z.top() = m;
+#endif
 }
 void Element() {
   if (*infix == '(') {
      infix++;
      Formula();
-     if (*infix++ != ')') error();
+     if (*infix++ != ')') error(1);
   }
   else {
      char *p = infix;
      int sum = 0;
-     if (*infix < '0' || *infix > '9') error();
+     if (*infix < '0' || *infix > '9') error(2);
      while (*infix >= '0' && *infix <= '9') {
         sum = sum*10 + *infix - '0';
         *postfix++ = *infix++;
      }
      *postfix++ = ' ';
+#if EVALUATE
      z.push(sum);
+#endif
   }
 }
-#define MAXSIZE 100
-main() {
-   char s[MAXSIZE], r[MAXSIZE]; 
+int main() {
    cout << "Enter a formula in infix notation: ";
    cin.getline(s, MAXSIZE);
    for (int i = 0; s[i]; i++) //removes spaces
@@ -124,6 +136,9 @@ main() {
    Formula();
    *postfix = 0;
    cout << "The equivalent of formula in the postfix form: " << r << endl;
+#if EVALUATE
    cout << "The result of the formula evaluation: " << z.top() << endl;
+#endif
+   return 0;
 }
 
