@@ -32,9 +32,9 @@ void expression() {
 void assignment_expression() {
    char *save_infix = infix, *save_postfix = postfix;
    unary_expression();
-   //check_lvalue();
    char sign = *infix;
    if (sign == '=' || sign && strchr("+-/*%^|&",  sign) && infix[1] == '=' || (!strncmp("<<", infix, 2) || !strncmp(">>", infix, 2)) && infix[2] == '=') {
+      //check_lvalue();
       infix++;
       if (sign != '=')
          if (sign == '<' || sign == '>')
@@ -208,8 +208,11 @@ void unary_expression() {
    else if (sign && strchr("+-*&!~", sign)) {
       infix++;
       cast_expression();
-      sprintf(postfix, "@unary%c ", sign);
-      postfix += 8;
+      if (sign == '-' || sign == '+')
+         sprintf(postfix++, "@%c ", sign);
+      else
+         sprintf(postfix, "%c ", sign);
+      postfix += 2;
    }
    else if (!strncmp(infix, "sizeof(", 7)) {
       infix += 7;
