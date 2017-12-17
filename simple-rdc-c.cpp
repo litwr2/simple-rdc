@@ -352,6 +352,7 @@ int main() {
    infix = s;
    postfix = r;
    expression();
+   if (infix != 0) throw 12;
    *postfix = 0;
    cout << "The equivalent of formula in the postfix form: " << r << endl;
    return 0;

@@ -134,6 +134,7 @@ int main() {
    infix = s;
    postfix = r;
    Formula();
+   if (infix != 0) error(5);
    *postfix = 0;
    cout << "The equivalent of formula in the postfix form: " << r << endl;
 #if EVALUATE
